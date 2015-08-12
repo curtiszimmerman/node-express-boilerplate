@@ -164,7 +164,11 @@ var app = (function() {
 		//});
 
 		// route handler
-		require(__dirname+'/routes/routes.js')($app);
+		//require(__dirname+'/routes/routes.js')($app);
+
+		$app.use(express.static(__dirname+'/pub', {
+			index: 'index.html'
+		}));
 		
 		// development error handler
 		if ($data.server.environment === 'development') $app.use(errorHandler());

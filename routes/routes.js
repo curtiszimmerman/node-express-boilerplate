@@ -7,20 +7,17 @@
  * @version 0.0.1a
  */
 
-module.exports = function( app ) {
+module.exports = function( $app ) {
 	"use strict";
 
 	var express           = require('express');
-	var router            = express.Router();
 	var $log              = require('../lib/log.js');
 
 	$log.debug('initializing routes...');
 
 	//app.
 
-	app.use(express.static(__dirname+'/pub', {
+	$app.use(express.static(__dirname+'/pub', {
 		index: 'index.html'
 	}));
-
-	app.use('/', router);
 };
