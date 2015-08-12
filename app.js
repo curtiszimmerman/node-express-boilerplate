@@ -119,10 +119,10 @@ var app = (function() {
 			}
 			if (typeof($data.config.server.environment) !== 'undefined' && $data.config.server.environment === 'production') $data.server.environment = 'production';
 			if (typeof($data.config.server.cors) !== 'undefined') $data.server.cors = true;
-			if (typeof($data.config.server.port) !== 'undefined') $data.server.port = $data.config.port;
+			if (typeof($data.config.server.port) !== 'undefined') $data.server.port = $data.config.server.port;
 			if (typeof($data.config.server.log) !== 'undefined') {
 				if ($data.config.server.log.level) $data.server.log.level = $data.config.server.log.level-1;
-				$data.server.log.quiet = $data.server.log.level === -1 ? true : false;
+				$data.server.log.quiet = $data.server.log.level === -1 || $data.config.server.log.quiet ? true : false;
 			}
 			if (typeof($data.config.server.database) !== 'undefined') {
 				if ($data.config.server.database.enabled === true) $data.database.enabled = true;
