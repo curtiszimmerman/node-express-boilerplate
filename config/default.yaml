@@ -1,0 +1,10 @@
+
+server:
+  cors: false
+  environment: development
+  log:
+    level: 6
+    quiet: true
+  port: 4488
+database:
+  enabled: false
