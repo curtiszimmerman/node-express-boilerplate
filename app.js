@@ -52,7 +52,7 @@ var app = (function() {
 				enabled: true,
 				interval: 60
 			},
-			port: 4489,
+			port: 8080,
 			stats: {
 				id: {
 					length: 8,
@@ -99,20 +99,34 @@ var app = (function() {
 		});
 		// config file parse
 		var environment = typeof(process.env.NODE_ENV) !== 'undefined' ? process.env.NODE_ENV : 'default';
-		var configFile = $data.server.config.dir+environment+'.yaml';
-		try {
-			$data.config = yaml.safeLoad(fs.readFileSync(configFile, 'utf8'));
-			if (typeof($data.config) === 'undefined') throw new Error();
-		} catch(e) {
-			$log.critical('Could not read config file: '+configFile);
-		}
-		console.log('++++['+JSON.stringify($data.config)+']');
-		if (typeof($data.config.environment) !== 'undefined' && $data.config.environment === 'production') $data.server.environment = 'production';
-		if (typeof($data.config.cors) !== 'undefined') $data.content.settings.cors = true;
-		if (typeof($data.config.port) !== 'undefined') $data.server.port = $datad.config.port;
-		if (typeof($data.config.log) !== 'undefined') {
-			if ($data.config.log.level) $data.server.log.level = $data.config.log.level-1;
-			$data.server.log.quiet = $data.server.log.level === -1 ? true : false;
+		var configType = typeof(process.env.NODE_CONFIG) !== 'undefined' && process.env.NODE_CONFIG === 'env' ? 'env' : 'yaml';
+		if (configType === 'env') {
+			// we want to use environment variables for our configuration data
+			if (typeof(process.env.NODE_ENVIRONMENT) !== 'undefined' && process.env.NODE_ENVIRONMENT === 'production') $data.server.environment = 'production';
+			if (typeof(process.env.NODE_CORS) !== 'undefined' && process.env.NODE_CORS === 'true') $data.content.settings.cors = true;
+			if (typeof(process.env.NODE_DATABASE) !== 'undefined' && process.env.NODE_DATABASE === 'true') $data.database.enabled = true;
+			if (typeof(process.env.NODE_PORT) !== 'undefined') $data.server.port = process.env.NODE_PORT;
+			if (typeof(process.env.NODE_LOGLEVEL) !== 'undefined') $data.server.log.level = process.env.NODE_LOGLEVEL-1;
+			if (typeof(process.env.NODE_QUIET) !== 'undefined' && process.env.NODE_QUIET === 'true') $data.server.log.quiet = true;
+		} else {
+			// we want to use yaml config file for our configuration data
+			var configFile = $data.server.config.dir+environment+'.yaml';
+			try {
+				$data.config = yaml.safeLoad(fs.readFileSync(configFile, 'utf8'));
+				if (typeof($data.config) === 'undefined') throw new Error();
+			} catch(e) {
+				$log.critical('Could not read config file: '+configFile);
+			}
+			if (typeof($data.config.server.environment) !== 'undefined' && $data.config.server.environment === 'production') $data.server.environment = 'production';
+			if (typeof($data.config.server.cors) !== 'undefined') $data.content.settings.cors = true;
+			if (typeof($data.config.server.port) !== 'undefined') $data.server.port = $data.config.port;
+			if (typeof($data.config.server.log) !== 'undefined') {
+				if ($data.config.server.log.level) $data.server.log.level = $data.config.server.log.level-1;
+				$data.server.log.quiet = $data.server.log.level === -1 ? true : false;
+			}
+			if (typeof($data.config.server.database) !== 'undefined') {
+				if ($data.config.server.database.enabled === true) $data.database.enabled = true;
+			}
 		}
 
 		// initialize application instance data
