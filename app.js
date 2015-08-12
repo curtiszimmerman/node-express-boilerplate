@@ -103,7 +103,7 @@ var app = (function() {
 		if (configType === 'env') {
 			// we want to use environment variables for our configuration data
 			if (typeof(process.env.NODE_ENVIRONMENT) !== 'undefined' && process.env.NODE_ENVIRONMENT === 'production') $data.server.environment = 'production';
-			if (typeof(process.env.NODE_CORS) !== 'undefined' && process.env.NODE_CORS === 'true') $data.content.settings.cors = true;
+			if (typeof(process.env.NODE_CORS) !== 'undefined' && process.env.NODE_CORS === 'true') $data.server.cors = true;
 			if (typeof(process.env.NODE_DATABASE) !== 'undefined' && process.env.NODE_DATABASE === 'true') $data.database.enabled = true;
 			if (typeof(process.env.NODE_PORT) !== 'undefined') $data.server.port = process.env.NODE_PORT;
 			if (typeof(process.env.NODE_LOGLEVEL) !== 'undefined') $data.server.log.level = process.env.NODE_LOGLEVEL-1;
@@ -118,7 +118,7 @@ var app = (function() {
 				$log.critical('Could not read config file: '+configFile);
 			}
 			if (typeof($data.config.server.environment) !== 'undefined' && $data.config.server.environment === 'production') $data.server.environment = 'production';
-			if (typeof($data.config.server.cors) !== 'undefined') $data.content.settings.cors = true;
+			if (typeof($data.config.server.cors) !== 'undefined') $data.server.cors = true;
 			if (typeof($data.config.server.port) !== 'undefined') $data.server.port = $data.config.port;
 			if (typeof($data.config.server.log) !== 'undefined') {
 				if ($data.config.server.log.level) $data.server.log.level = $data.config.server.log.level-1;
